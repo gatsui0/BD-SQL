@@ -1,0 +1,264 @@
+DROP DATABASE IF EXISTS REDE_social_para_bixos;
+
+CREATE DATABASE REDE_social_para_bixos;
+USE rede_social_para_bixos;	
+
+DROP TABLE IF EXISTS anuncio_loja_online;
+DROP TABLE IF EXISTS anuncio_espaco_local;
+DROP TABLE IF EXISTS duracao;
+DROP TABLE IF EXISTS publicacao_paga;
+DROP TABLE IF EXISTS publicacao_gratuita;
+DROP TABLE IF EXISTS grupo_tem_publicacao;
+DROP TABLE IF EXISTS perfil_tem_publicacao;
+DROP TABLE IF EXISTS publicacao;
+DROP TABLE IF EXISTS esta_em;
+DROP TABLE IF EXISTS gerencia;
+DROP TABLE IF EXISTS grupo;
+DROP TABLE IF EXISTS fanpage_do_pet;
+DROP TABLE IF EXISTS relacionamento;
+DROP TABLE IF EXISTS perfil;
+DROP TABLE IF EXISTS usuario;
+
+CREATE TABLE usuario(
+	email VARCHAR(30),
+    senha VARCHAR(10),
+    telefone CHAR(9),
+    
+	PRIMARY KEY(email),
+    link_perfil VARCHAR(40)
+);
+
+CREATE TABLE perfil(
+	nome CHAR(20),
+    trabalha_em CHAR(30),
+	mora_em CHAR(30),
+	estudou_em CHAR(30),
+    estado_civil CHAR(8),
+    link VARCHAR(40),
+    
+    PRIMARY KEY(link),
+    
+	email_usuario VARCHAR(40),
+    FOREIGN KEY(email_usuario) REFERENCES usuario(email) on delete cascade
+);
+
+CREATE TABLE relacionamento(
+    pagina VARCHAR(40),
+    pagina1 VARCHAR(40),
+    primary key (pagina, pagina1),
+    foreign key (pagina) references perfil(link) on delete cascade,
+    foreign key (pagina1) references perfil(link) on delete cascade
+);
+CREATE TABLE fanpage_do_pet(
+	descricao CHAR(100),
+    tipo_de_mascote CHAR(40),
+    nome_do_mascote VARCHAR(40),
+	link VARCHAR(40),
+    
+    primary key(link, nome_do_mascote),
+    foreign key (link) references perfil(link) on delete cascade
+);
+
+CREATE TABLE grupo(
+	n_de_membros CHAR(100),
+    criado_desde CHAR(40),
+    descricao VARCHAR(40),
+    id_grupo VARCHAR(40),
+    primary key (id_grupo)
+);
+
+CREATE TABLE esta_em(
+
+    link_perfil VARCHAR(40),
+    id_grupo VARCHAR(40),
+    desde CHAR(10),
+    
+    primary key (link_perfil, id_grupo),
+    foreign key (link_perfil) references perfil(link) on delete cascade,
+    foreign key (id_grupo) references grupo(id_grupo) on delete cascade
+);
+CREATE TABLE gerencia(
+
+
+    link_de_gerencia VARCHAR(40),
+    id_grupo_de_gerencia VARCHAR(40),
+    
+    primary key (link_de_gerencia, id_grupo_de_gerencia),
+    foreign key (link_de_gerencia) references perfil(link) on delete cascade,
+    foreign key (id_grupo_de_gerencia) references grupo(id_grupo) on delete cascade
+);
+
+CREATE TABLE publicacao(
+	criado_desde CHAR(10),
+    descricao VARCHAR(100),
+    id CHAR(10),
+    
+    primary key (id)
+);
+
+CREATE TABLE perfil_tem_publicacao(
+ 
+    link_perfil VARCHAR(40),
+	id_publicacao CHAR(10),
+
+    primary key (link_perfil, id_publicacao),
+    foreign key (link_perfil) references perfil(link) on delete cascade,
+    foreign key (id_publicacao) references publicacao(id) on delete cascade
+);
+CREATE TABLE grupo_tem_publicacao(
+
+    id_publicacao CHAR(10),
+	id_grupo VARCHAR(40),
+
+    primary key (id_publicacao, id_grupo),
+    foreign key (id_publicacao) references publicacao(id) on delete cascade,
+    foreign key (id_grupo) references grupo(id_grupo) on delete cascade
+
+);
+
+CREATE TABLE publicacao_gratuita(
+	n_de_curtidas CHAR(100),
+    comentar CHAR(200),
+    tipo_de_publico_animal CHAR(10),
+    visibilidade CHAR(10),
+    url_video VARCHAR(40),
+
+	id_publicacao CHAR(10),
+	primary key (id_publicacao),
+    foreign key (id_publicacao) references publicacao(id) on delete cascade
+);
+
+CREATE TABLE publicacao_paga(
+	n_de_curtidas CHAR(100),
+    n_de_visualizacoes CHAR(100),
+    comentar CHAR(200),
+    tipo_de_publico_animal CHAR(10),
+    link_site VARCHAR(40),
+
+	id_publicacao CHAR(10),
+	primary key (id_publicacao),
+    foreign key (id_publicacao) references publicacao(id) on delete cascade
+);
+
+CREATE TABLE anuncio_espaco_local(
+	horario CHAR(5),
+    bairro VARCHAR(20),
+    endereco VARCHAR(100),
+    cidade VARCHAR(20),
+    
+    id CHAR(10),
+    primary key (id),
+    foreign key (id) references publicacao_paga(id_publicacao) on delete cascade
+);
+
+CREATE TABLE anuncio_loja_online(
+	url VARCHAR (40),
+	nome_da_loja CHAR(20),
+	horario_de_atendimento CHAR(5),
+
+    id CHAR(10),
+    primary key (id),
+    foreign key (id) references publicacao_paga(id_publicacao) on delete cascade
+);
+
+ALTER TABLE usuario ADD CONSTRAINT link_perfil FOREIGN KEY ( link_perfil ) REFERENCES perfil(link) on delete cascade;
+
+insert into usuario (email, senha, telefone) values ('bryan@hotmail.com', '123456', 996546389);
+insert into usuario (email, senha, telefone) values ('lucas@hotmail.com', '4546', 996552389);
+insert into usuario (email, senha, telefone) values ('luan@hotmail.com', '85636', 896546389);
+insert into usuario (email, senha, telefone) values ('gabriel123@hotmail.com', '1289646', 496548389);
+insert into usuario (email, senha, telefone) values ('igor4@hotmail.com', '412056', 926546360);
+insert into usuario (email, senha, telefone) values ('gabi123@hotmail.com', '04456', 994546374);
+insert into usuario (email, senha, telefone) values ('gabriel478@hotmail.com', '12745', 990146785);
+insert into usuario (email, senha, telefone) values ('leticiajojo@hotmail.com', '7345546', 426546759);
+insert into usuario (email, senha, telefone) values ('sarah45@hotmail.com', '12341506', 975546759);
+insert into usuario (email, senha, telefone) values ('guilher1@hotmail.com', '48748', 416544189);
+
+insert into perfil (nome, trabalha_em, mora_em, estudou_em, estado_civil, link) values ('bryan', 'empresa UTfpr', 'sao paulo', 'colegio sul', 'casado', 'www.redesocial.com/bryan5641');
+insert into perfil (nome, trabalha_em, mora_em, estudou_em, estado_civil, link) values ('lucas', 'empresa mendonça', 'mato grosso do sull', 'colegio maria', 'solteiro', 'www.redesocial.com/lucas5641');
+insert into perfil (nome, trabalha_em, mora_em, estudou_em, estado_civil, link) values ('luan', 'empresa UPA', 'parana', 'colegio inglaterra', 'solteiro', 'www.redesocial.com/luan5641');
+insert into perfil (nome, trabalha_em, mora_em, estudou_em, estado_civil, link) values ('gabriel', 'empresa google', 'goiania', 'escola einstein', 'casado', 'www.redesocial.com/gabriel5641');
+insert into perfil (nome, trabalha_em, mora_em, estudou_em, estado_civil, link) values ('igor', 'empresa instagram', 'acre', 'colegio maquiavel', 'solteiro', 'www.redesocial.com/igor5641');
+insert into perfil (nome, trabalha_em, mora_em, estudou_em, estado_civil, link) values ('gabi', 'empresa Itaú', 'rio de janeiro', 'colegio mendonça', 'solteiro', 'www.redesocial.com/gabi5641');
+insert into perfil (nome, trabalha_em, mora_em, estudou_em, estado_civil, link) values ('gabriel', 'empresa bradesco', 'amazonas', 'colegio sul', 'casao', 'www.redesocial.com/gabriel50641');
+insert into perfil (nome, trabalha_em, mora_em, estudou_em, estado_civil, link) values ('leticia', 'empresa CAIXA', 'piaui', 'colegio estadual paulista', 'solteiro', 'www.redesocial.com/leticia5641');
+insert into perfil (nome, trabalha_em, mora_em, estudou_em, estado_civil, link) values ('sarah', 'empresa FISK', 'sao paulo', 'colegio sul metropolitano', 'casado', 'www.redesocial.com/sarah5641');
+insert into perfil (nome, trabalha_em, mora_em, estudou_em, estado_civil, link) values ('guilherme', 'empresa Descomplica', 'mato grosso', 'colegio frota militar', 'solteiro', 'www.redesocial.com/guilherme5641');
+
+insert into fanpage_do_pet (descricao, tipo_de_mascote, nome_do_mascote, link) values ('eu sou muito legal procuro amigos', 'cachorro', 'pitinho', 'www.redesocial.com/bryan5641');
+insert into fanpage_do_pet (descricao, tipo_de_mascote, nome_do_mascote, link) values ('nada.', 'coelho', 'amarelinha', 'www.redesocial.com/lucas5641');
+insert into fanpage_do_pet (descricao, tipo_de_mascote, nome_do_mascote, link) values ('também tenho facebook', 'cabra', 'roxinho', 'www.redesocial.com/luan5641');
+insert into fanpage_do_pet (descricao, tipo_de_mascote, nome_do_mascote, link) values ('amo meu cachorro', 'cachorro', 'may', 'www.redesocial.com/gabriel5641');
+insert into fanpage_do_pet (descricao, tipo_de_mascote, nome_do_mascote, link) values ('nenhum.', 'gato', 'giz', 'www.redesocial.com/igor5641');
+insert into fanpage_do_pet (descricao, tipo_de_mascote, nome_do_mascote, link) values ('procuro amizades', 'panda', 'frajola', 'www.redesocial.com/gabi5641');
+insert into fanpage_do_pet (descricao, tipo_de_mascote, nome_do_mascote, link) values ('alguem gosta de caes?', 'cobra', 'fofinho', 'www.redesocial.com/gabriel50641');
+insert into fanpage_do_pet (descricao, tipo_de_mascote, nome_do_mascote, link) values ('tenho 19 anos e moro em sao paulo', 'jacaré', 'orelhudinho', 'www.redesocial.com/sarah5641');
+insert into fanpage_do_pet (descricao, tipo_de_mascote, nome_do_mascote, link) values ('procuro amigos verdadeiro!', 'gato', 'patinho', 'www.redesocial.com/guilherme5641');
+insert into fanpage_do_pet (descricao, tipo_de_mascote, nome_do_mascote, link) values ('nada.', 'gato', 'magy', 'www.redesocial.com/guilherme5641');
+
+
+insert into grupo (n_de_membros, criado_desde, descricao, id_grupo) values ('10', '15/09/2012', 'nenhum.', '86896');
+insert into grupo (n_de_membros, criado_desde, descricao, id_grupo) values ('11', '10/01/2014', 'nenhum.', '8987');
+insert into grupo (n_de_membros, criado_desde, descricao, id_grupo) values ('20.', '16/03/2011', 'nenhum.', '8978');
+insert into grupo (n_de_membros, criado_desde, descricao, id_grupo) values ('40', '24/07/2012', 'nenhum.', '78978');
+insert into grupo (n_de_membros, criado_desde, descricao, id_grupo) values ('5', '07/10/2019', 'nenhum.', '0654');
+insert into grupo (n_de_membros, criado_desde, descricao, id_grupo) values ('15', '06/12/2010', 'nenhum.', '015455');
+insert into grupo (n_de_membros, criado_desde, descricao, id_grupo) values ('20', '01/07/2009', 'nenhum.', '54326');
+insert into grupo (n_de_membros, criado_desde, descricao, id_grupo) values ('30', '02/09/2010', 'nenhum.', '745');
+insert into grupo (n_de_membros, criado_desde, descricao, id_grupo) values ('14', '03/12/2011', 'nenhum.', '5327885');
+insert into grupo (n_de_membros, criado_desde, descricao, id_grupo) values ('3', '30/05/2012', 'nenhum.', '78532ao');
+
+insert into publicacao (criado_desde, descricao, id) values ('10/08/2012', 'deem like por favor', '55710');
+insert into publicacao (criado_desde, descricao, id) values ('31/05/2010', 'aqui tem o link da publicacao', '08740');
+insert into publicacao (criado_desde, descricao, id) values ('18/04/2014', 'nenhum', '566810');
+insert into publicacao (criado_desde, descricao, id) values ('06/03/2001', 'me chamem no whats', '02410');
+insert into publicacao (criado_desde, descricao, id) values ('07/02/2002', 'estou aqui para concientizar', '510099780');
+insert into publicacao (criado_desde, descricao, id) values ('09/01/2002', 'gostaria de ajudar a todos..', '04571');
+insert into publicacao (criado_desde, descricao, id) values ('12/04/2009', 'procuro futuros donos de cachorros', '03594810');
+insert into publicacao (criado_desde, descricao, id) values ('13/05/2015', 'aqui tem 3 cachorros para doação', '0548');
+insert into publicacao (criado_desde, descricao, id) values ('30/05/2012', 'denunciem abusadores de animais', '5150877990');
+insert into publicacao (criado_desde, descricao, id) values ('15/05/2001', 'nenhum', '97843850');
+
+insert into publicacao_gratuita (n_de_curtidas, comentar, tipo_de_publico_animal, visibilidade, url_video, id_publicacao) values ('41', 'nenhum.', 'cachorros', 'provado', 'nenhum', '55710');
+insert into publicacao_gratuita (n_de_curtidas, comentar, tipo_de_publico_animal, visibilidade, url_video, id_publicacao) values ('10', 'nenhum.', 'gatos', 'publico', 'www.youtube.com/fhd01rtyrs', '08740');
+insert into publicacao_gratuita (n_de_curtidas, comentar, tipo_de_publico_animal, visibilidade, url_video, id_publicacao) values ('11', 'nenhum.', 'gatos', 'publico', 'nenhum', '566810');
+insert into publicacao_gratuita (n_de_curtidas, comentar, tipo_de_publico_animal, visibilidade, url_video, id_publicacao) values ('49', 'nenhum.', 'cachorros', 'provado', 'www.youtube.com/f457rtyrs', '02410');
+insert into publicacao_gratuita (n_de_curtidas, comentar, tipo_de_publico_animal, visibilidade, url_video, id_publicacao) values ('105', 'nenhum.', 'macacos', 'publico', 'nenhum', '510099780');
+insert into publicacao_gratuita (n_de_curtidas, comentar, tipo_de_publico_animal, visibilidade, url_video, id_publicacao) values ('05', 'nenhum.', 'peixes', 'publico', 'nenhum', '04571');
+insert into publicacao_gratuita (n_de_curtidas, comentar, tipo_de_publico_animal, visibilidade, url_video, id_publicacao) values ('32', 'nenhum.', 'cobras', 'publico', 'www.youtube.com/fhdrtyrs', '03594810');
+insert into publicacao_gratuita (n_de_curtidas, comentar, tipo_de_publico_animal, visibilidade, url_video, id_publicacao) values ('45', 'nenhum.', 'cachorros', 'provado', 'www.youtube.com/fhd45tyrs', '0548');
+insert into publicacao_gratuita (n_de_curtidas, comentar, tipo_de_publico_animal, visibilidade, url_video, id_publicacao) values ('58', 'nenhum.', 'gatos', 'publico', 'nenhum', '5150877990');
+insert into publicacao_gratuita (n_de_curtidas, comentar, tipo_de_publico_animal, visibilidade, url_video, id_publicacao) values ('95', 'nenhum.', 'gatos', 'provado', 'nenhum', '97843850');
+
+insert into publicacao_paga (n_de_curtidas, n_de_visualizacoes, comentar, tipo_de_publico_animal, link_site, id_publicacao) values ('74', '100', 'procuro doadores de gatos', 'peixes', 'nenhum.', '55710');
+insert into publicacao_paga (n_de_curtidas, n_de_visualizacoes, comentar, tipo_de_publico_animal, link_site, id_publicacao) values ('100', '150', 'procuro doadores de cachorros', 'cachorro', 'nenhum.', '08740');
+insert into publicacao_paga (n_de_curtidas, n_de_visualizacoes, comentar, tipo_de_publico_animal, link_site, id_publicacao) values ('11', '35', 'nenhum.', 'cachorro', 'nenhum.', '566810');
+insert into publicacao_paga (n_de_curtidas, n_de_visualizacoes, comentar, tipo_de_publico_animal, link_site, id_publicacao) values ('25', '65',  'adorei', 'cachorro', 'nenhum.', '02410');
+insert into publicacao_paga (n_de_curtidas, n_de_visualizacoes, comentar, tipo_de_publico_animal, link_site, id_publicacao) values ('732', '1100', 'gostaria de conhecer mais animais!', 'peixes', 'nenhum.', '510099780');
+insert into publicacao_paga (n_de_curtidas, n_de_visualizacoes, comentar, tipo_de_publico_animal, link_site, id_publicacao) values ('21', '30', 'procuro bons amigos', 'gato', 'nenhum.', '04571');
+insert into publicacao_paga (n_de_curtidas, n_de_visualizacoes, comentar, tipo_de_publico_animal, link_site, id_publicacao) values ('05', '10', 'nenhum', 'cachorro', 'nenhum.', '03594810');
+insert into publicacao_paga (n_de_curtidas, n_de_visualizacoes, comentar, tipo_de_publico_animal, link_site, id_publicacao) values ('6', '10', 'meu telefone 99659985', 'cobras','nenhum.', '0548');
+insert into publicacao_paga (n_de_curtidas, n_de_visualizacoes, comentar, tipo_de_publico_animal, link_site, id_publicacao) values ('15', '16', 'gatos e caes sao tudo de bom','cachorro', 'nenhum.', '5150877990');
+insert into publicacao_paga (n_de_curtidas, n_de_visualizacoes, comentar, tipo_de_publico_animal, link_site, id_publicacao) values ('13', '23', 'gostaria de ter mais animais', 'gato', 'nenhum.', '97843850');
+
+insert into anuncio_espaco_local (horario, bairro, endereco, cidade, id) values ('14:00', 'brasil', 'rua joana lual, 125', 'sao paulo', '55710');
+insert into anuncio_espaco_local (horario, bairro, endereco, cidade, id) values ('09:00', 'boa sorte', 'Rua Barão de Vitória, 355', 'sao paulo', '08740');
+insert into anuncio_espaco_local (horario, bairro, endereco, cidade, id) values ('18:00', 'bela vista', 'Rodovia Raposo Tavares, 1005', 'amazonas', '566810');
+insert into anuncio_espaco_local (horario, bairro, endereco, cidade, id) values ('14:00', 'morada da lua', 'Travessa da CDL, 1155', 'sao paulo', '02410');
+insert into anuncio_espaco_local (horario, bairro, endereco, cidade, id) values ('14:45', 'novas barreiras', 'Rua Carlos Augusto Cornelsen, 105', 'sao paulo', '510099780');
+insert into anuncio_espaco_local (horario, bairro, endereco, cidade, id) values ('19:00', 'barreirinhas', 'Avenida Governador José Malcher, 12', 'parana', '04571');
+insert into anuncio_espaco_local (horario, bairro, endereco, cidade, id) values ('12:00', 'serra do milmo', 'Rua Maria Luísa do Val Penteado, 1275', 'rio de janeiro', '03594810');
+insert into anuncio_espaco_local (horario, bairro, endereco, cidade, id) values ('10:00', 'vila dos sais', 'Praça da República, 1050', 'sao paulo', '0548');
+insert into anuncio_espaco_local (horario, bairro, endereco, cidade, id) values ('7:00', 'alphavile', 'rua joana lual, 1232', 'sao paulo', '5150877990');
+insert into anuncio_espaco_local (horario, bairro, endereco, cidade, id) values ('7:30', 'aratu', 'Avenida Esbertalina Barbosa Damiani, 1', 'sao paulo', '97843850');
+
+insert into anuncio_loja_online (url, nome_da_loja, horario_de_atendimento, id) values ('www.athenasloja.com.br', 'athenas', '12:25', '55710');
+insert into anuncio_loja_online (url, nome_da_loja, horario_de_atendimento, id) values ('www.firelojas.com.br', 'fire', '06:59', '08740');
+insert into anuncio_loja_online (url, nome_da_loja, horario_de_atendimento, id) values ('www.lojapatrick.com.br', 'patrick lojas', '14:00', '566810');
+insert into anuncio_loja_online (url, nome_da_loja, horario_de_atendimento, id) values ('www.mascotesfofosloja.com.br', 'mascotesfofos loja', '10:15', '02410');
+insert into anuncio_loja_online (url, nome_da_loja, horario_de_atendimento, id) values ('www.gabrielemascotes.com.br', 'gabriel loja', '05:59', '510099780');
+insert into anuncio_loja_online (url, nome_da_loja, horario_de_atendimento, id) values ('www.bichinhosfofosloja.com.br', 'fofos loja', '20:00', '04571');
+insert into anuncio_loja_online (url, nome_da_loja, horario_de_atendimento, id) values ('www.americanas.com.br', 'americanas', '14:00', '03594810');
+insert into anuncio_loja_online (url, nome_da_loja, horario_de_atendimento, id) values ('www.itauloja.com.br', 'itau loja', '12:00', '0548');
+insert into anuncio_loja_online (url, nome_da_loja, horario_de_atendimento, id) values ('www.bryanlojas.com.br', 'bryan lojas', '11:25', '5150877990');
+insert into anuncio_loja_online (url, nome_da_loja, horario_de_atendimento, id) values ('www.esmeraldaloja.com.br', 'esmeralda lojas', '10:15', '97843850');
