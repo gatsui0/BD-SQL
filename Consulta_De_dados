@@ -1,0 +1,64 @@
+
+ -- perfil com perfis de pet do tipo cachorro
+ 
+ select p.nome, p.link
+ from perfil p
+ where p.link in (select f.link
+                  from fanpage_do_pet f
+                  where f.tipo_de_mascote = 'cachorro');
+                  
+ -- perfis que tem perfis de pet
+ 
+ select p.nome, p.link
+ from perfil p
+ where p.link in (select f.link
+                  from fanpage_do_pet f);
+
+ -- publicacoes gratuitas criadas
+
+select p.criado_desde, p.id
+from publicacao p
+where p.id in (select gratuita.id_publicacao
+				from publicacao_gratuita gratuita);
+                
+ -- usuario com perfis ativos
+ 
+ select u.email, u.telefone, p.link
+from usuario u, perfil p
+ where u.email = email_usuario;
+
+ -- publicacoes pagas criadas
+ 
+select p.criado_desde, p.id
+from publicacao p
+where p.id in (select paga.id_publicacao
+				from publicacao_paga paga);
+                
+ -- publicoes pagas de locais
+ 
+select l.horario, l.bairro, l.endereco, l.cidade
+from anuncio_espaco_local l
+where l.id in (select paga.id_publicacao
+				from publicacao_paga paga);
+
+ -- publicoes pagas de lojas virtuais
+ 
+select l.nome_da_loja, l.url, l.horario_de_atendimento 
+from anuncio_loja_online l
+where l.id in (select paga.id_publicacao
+				from publicacao_paga paga);
+                
+ -- numero de curtidas da publicação paga de loja virtual da loja gabriel loja
+ 
+select p.n_de_curtidas
+from publicacao_paga p
+where p.id_publicacao in (select l.id
+				from anuncio_loja_online l
+				where l.nome_da_loja = 'gabriel loja');
+
+ -- numero de visualizações e de anuncio de espaço fisico em são paulo
+ 
+ select p.n_de_visualizacoes, l.cidade
+ from publicacao_paga p, anuncio_espaco_local l
+ where l.id = p.id_publicacao
+ and l.cidade = 'são paulo';
